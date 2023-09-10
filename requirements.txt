@@ -3,5 +3,3 @@ pandas
 streamlit
 streamlit_echarts
 pyecharts
-operator
-tokenize

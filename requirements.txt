@@ -1,6 +1,9 @@
 altair
+numpy
 pandas
 streamlit
 streamlit_echarts
 pyecharts
 openpyxl
+streamlit-authenticator
+PIL

@@ -1,0 +1,114 @@
+# -*- coding: utf-8 -*-
+import time,os,random
+import streamlit as st
+import numpy as np
+import pandas as pd
+from operator import index
+from tokenize import Ignore
+from streamlit_echarts import st_pyecharts
+from pyecharts.charts import Radar,Line,Sankey,Boxplot
+from pyecharts import options as opts
+from pyecharts.faker import Faker
+
+#随机生成颜色
+def randomcolor():
+    colorArr = ['1','2','3','4','5','6','7','8','9','A','B','C','D','E','F']
+    color = ""
+    for i in range(6):
+        color += colorArr[random.randint(0,14)]
+    return "#"+color
+
+st.set_page_config(page_title="Demo", page_icon="✔",layout="wide")
+
+st.header('This is a header with a divider', divider='blue')
+st.caption('A caption with _italics_ :blue[colors] and emojis :sunglasses:')
+#读取数据
+df = pd.read_excel(os.getcwd() + '//' + 'talents.xlsx',index_col=[0])
+df_position = pd.read_excel(os.getcwd() + '//' + 'peoples.xlsx',index_col=[0])
+df_view = pd.read_excel(os.getcwd() + '//' + 'views.xlsx')
+
+#获取所选择岗位对应的指标
+select_views = df_view.query('维度 == "技术能力"').loc[:,'指标'].drop_duplicates().dropna().values.tolist()
+#获取对应指标相应的数据
+df_tech = df[select_views]
+df_business = df[df_view.query('维度 == "业务知识"').loc[:,'指标'].values.tolist()]
+df_diathesis = df[df_view.query('维度 == "通用素质"').loc[:,'指标'].values.tolist()]
+
+
+
+
+
+
+# 桑基图示例
+# positions = df_position.iloc[:, 1].drop_duplicates().dropna().values.tolist()
+# indicators = df_view.query('维度 == "技术能力"').loc[:,'指标'].drop_duplicates().dropna().values.tolist()
+# position_indicators = df_view.query('维度 in @positions').loc[:,['维度','指标']].drop_duplicates().dropna().values.tolist()
+# source_list = df_view.query('维度 in @positions').loc[:,'维度'].drop_duplicates().dropna().values.tolist()
+# target_list = df_view.query('维度 in @positions').loc[:,'指标'].drop_duplicates().dropna().values.tolist()
+# #st.write(indicators)
+
+
+# sankey_links =[{'source': source, 'target': target, 'value': 10} for source, target in zip(source_list, target_list)]
+# sankey_nodes =[{'name': source[0]} for source in zip(source_list)] + [{'name': target[0]} for target in zip(target_list)]
+
+# st.write(sankey_nodes)
+# st.write(sankey_links)
+
+# area_Chart = Sankey()
+# area_Chart.set_global_opts(title_opts=opts.TitleOpts(title="团队人才分布堆积图"))
+# area_Chart.add(series_name='毕业生流向' ###给个桑基宝宝取个名字
+#              ,nodes=sankey_nodes
+#             #  [{'name':'北京'}
+#             #         #  ,{'name':'湖南'}
+#             #         #  ,{'name':'清华'}
+#             #         #  ,{'name':'北大'}
+#             #         #  ,{'name':'人大'}
+#             #         #  ,{'name':'浙大'}
+#             #         #  ,{'name':'复旦'}
+#             #         #  ,{'name':'中山'}
+#             #         #  ,{'name':'厦大'}
+#             #         #  ,{'name':'武大'}
+#             #         #  ,{'name':'川大'}
+#             #           ]   ##配置有多少个节点
+#              ,links=sankey_links
+#             #  [
+#             #         {'source':'北京','target':'清华','value':50}
+#             #         ,{'source':'北京','target':'北大','value':60}
+#             #         ,{'source':'北京','target':'人大','value':40}
+#             #         ,{'source':'北京','target':'复旦','value':60}
+#             #         ,{'source':'北京','target':'中山','value':30}
+#             #         ,{'source':'北京','target':'浙大','value':33}
+#             #         ,{'source':'北京','target':'厦大','value':22}
+#             #         ,{'source':'北京','target':'武大','value':5}
+#             #         ,{'source':'北京','target':'川大','value':12}
+#             #         ,{'source':'湖南','target':'清华','value':30}
+#             #         ,{'source':'湖南','target':'北大','value':40}
+#             #         ,{'source':'湖南','target':'人大','value':20}
+#             #         ,{'source':'湖南','target':'复旦','value':40}
+#             #         ,{'source':'湖南','target':'中山','value':10}
+#             #         ,{'source':'湖南','target':'浙大','value':13}
+#             #         ,{'source':'湖南','target':'厦大','value':9}
+#             #         ,{'source':'湖南','target':'武大','value':30}
+#             #         ,{'source':'湖南','target':'川大','value':25}
+#             #          ]   ###配置节点之间的信息流关系
+#                 ,linestyle_opt=opts.LineStyleOpts(opacity=0.2 ###透明度设置
+#                                                , curve=0.5  ###信息流的曲线弯曲度设置
+#                                                ,color="source" ##颜色设置，source表示使用节点的颜色
+#                                                ) ##线条格式 ,设置所有线条的格式
+#              ,label_opts=opts.LabelOpts(font_size=16
+#                                         ,position='left'
+#                                         ) ##标签配置，具体参数详见opts.LabelOpts()
+#            ,levels= [opts.SankeyLevelsOpts(  depth=0, ##第一层的配置
+#                                             itemstyle_opts=opts.ItemStyleOpts(color="#fbb4ae"),##节点格式的配置
+#                                             linestyle_opts=opts.LineStyleOpts(color="source", opacity=0.2, curve=0.5))##信息流的配置
+#                     ,opts.SankeyLevelsOpts(  depth=1,##第二层的配置
+#                                             itemstyle_opts=opts.ItemStyleOpts(color="#b3cde3"),##节点格式的配置
+#                                             linestyle_opts=opts.LineStyleOpts(color="source", opacity=0.2, curve=0.5))##信息的配置
+#                     ,opts.SankeyLevelsOpts(  depth=2,##第三层的配置
+#                                             itemstyle_opts=opts.ItemStyleOpts(color="#ccebc5"),##节点格式的配置
+#                                             linestyle_opts=opts.LineStyleOpts(color="source", opacity=0.2, curve=0.5))##信息的配置
+#                    ]# 桑基图每一层的设置。可以逐层设置
+#                 )
+
+# st_pyecharts(area_Chart, height="600px", key="2")
+

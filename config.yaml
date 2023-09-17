@@ -1,0 +1,17 @@
+credentials:
+  usernames:
+    admin:
+      email: admin@efunds.com.cn
+      name: Admin
+      password: "$2b$12$OCgVtlCNijTa7IkVuSD46.UFicJV1fnWcXsfh3v.RwvFxTClqwlAu" # admin888:To be replaced with hashed password
+    xiemingming:
+      email: xiemingming@efunds.com.cn
+      name: Xie Mingming
+      password: "$2b$12$dqHNIfxLwOoxsUpxlaaMCeCWGzbgO/qZN5amIeL8pu/SNLz/Raz0y" # mingming:To be replaced with hashed password
+cookie:
+  expiry_days: 30
+  key: FT-Talents # Must be string
+  name: talents
+preauthorized:
+  emails:
+  - xiemingming@efunds.com.cn

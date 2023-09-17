@@ -6,4 +6,4 @@ streamlit_echarts
 pyecharts
 openpyxl
 streamlit-authenticator
-PIL
+Pillow
